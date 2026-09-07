@@ -1,6 +1,8 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    
+    // 1. Matches highly structured granular path: listingImages/{userId}/{listingId}/{fileName}
     match /listingImages/{userId}/{listingId}/{fileName} {
       allow read: if true;
       allow write: if request.auth != null
@@ -9,6 +11,16 @@ service firebase.storage {
         && request.resource.contentType.matches('image/(jpeg|png|webp)');
       allow delete: if request.auth != null && request.auth.uid == userId;
     }
+
+    // 2. Matches simpler folder fallback path: listings/{listingId}/{allPaths=**}
+    match /listings/{listingId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null 
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 3. Matches profile images path: profileImages/{userId}/{fileName}
     match /profileImages/{userId}/{fileName} {
       allow read: if true;
       allow write: if request.auth != null && request.auth.uid == userId
@@ -16,6 +28,8 @@ service firebase.storage {
         && request.resource.contentType.matches('image/(jpeg|png|webp)');
       allow delete: if request.auth != null && request.auth.uid == userId;
     }
-    match /{allPaths=**} { allow read,write: if false; }
+
+    // Global catch-all fallback block to lock down unauthorized paths
+    match /{allPaths=**} { allow read, write: if false; }
   }
 }
