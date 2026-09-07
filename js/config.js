@@ -1,10 +1,10 @@
 export const firebaseConfig = {
-  apiKey: "REPLACE_WITH_FIREBASE_API_KEY",
-  authDomain: "REPLACE_WITH_FIREBASE_PROJECT.firebaseapp.com",
-  projectId: "REPLACE_WITH_FIREBASE_PROJECT_ID",
-  storageBucket: "REPLACE_WITH_FIREBASE_STORAGE_BUCKET",
-  messagingSenderId: "REPLACE_WITH_FIREBASE_MESSAGING_SENDER_ID",
-  appId: "REPLACE_WITH_FIREBASE_APP_ID"
+  apiKey: "AIzaSyAgVoUNblz22nu-PDK9HUSH-TLUriBDDdU",
+  authDomain: "smarket-45de7.firebaseapp.com",
+  projectId: "smarket-45de7",
+  storageBucket: "smarket-45de7.firebasestorage.app",
+  messagingSenderId: "869235196477",
+  appId: "1:869235196477:web:321fd76d207e7e7bcee054"
 };
 export const appCheckSiteKey = "REPLACE_WITH_RECAPTCHA_V3_SITE_KEY";
 export const appConfig = {
