@@ -1,0 +1,7 @@
+import {auth,db} from "./firebase.js";
+import {doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import {escapeHtml} from "./utils.js";
+const view=document.getElementById("profile-view");const form=document.getElementById("profile-form");
+if(view){if(!auth.currentUser)view.innerHTML="<div class=empty>Sign in first.</div>";else{const s=await getDoc(doc(db,"users",auth.currentUser.uid));const x=s.data()||{};view.innerHTML=`<h1>${escapeHtml(x.displayName||"Member")}</h1><p>${escapeHtml(x.bio||"")}</p><p class=meta>${escapeHtml(x.phone||"Phone not public")}</p><a class="btn btn-primary" href="edit-profile.html">Edit profile</a>`}}
+if(form){if(!auth.currentUser){location.href="login.html"}else{const s=await getDoc(doc(db,"users",auth.currentUser.uid));const x=s.data()||{};name.value=x.displayName||"";phone.value=x.phone||"";bio.value=x.bio||""}}
+form?.addEventListener("submit",async e=>{e.preventDefault();const status=document.getElementById("profile-status");try{await setDoc(doc(db,"users",auth.currentUser.uid),{displayName:name.value.trim(),phone:phone.value.trim(),bio:bio.value.trim(),updatedAt:serverTimestamp()},{merge:true});status.textContent="Profile saved."}catch(x){status.textContent=x.message}});

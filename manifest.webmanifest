@@ -1,0 +1,10 @@
+{
+  "name":"MarketHub Ghana",
+  "short_name":"MarketHub",
+  "start_url":"/index.html",
+  "display":"standalone",
+  "background_color":"#f7f7f8",
+  "theme_color":"#D90429",
+  "description":"A Ghana classifieds marketplace.",
+  "icons":[]
+}

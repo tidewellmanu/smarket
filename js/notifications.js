@@ -1,0 +1,4 @@
+import {auth,db} from "./firebase.js";
+import {collection,query,where,orderBy,limit,onSnapshot} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import {escapeHtml} from "./utils.js";
+const el=document.getElementById("notifications");if(el){if(!auth.currentUser){el.innerHTML="<div class=empty>Sign in to view notifications.</div>"}else onSnapshot(query(collection(db,"notifications"),where("userId","==",auth.currentUser.uid),orderBy("createdAt","desc"),limit(50)),s=>el.innerHTML=s.docs.map(d=>`<div class="stat-card"><strong>${escapeHtml(d.data().title||"Notification")}</strong><p>${escapeHtml(d.data().body||"")}</p></div>`).join("")||"<div class=empty>No notifications.</div>")}

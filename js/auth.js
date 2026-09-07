@@ -1,0 +1,12 @@
+import {auth,googleProvider} from "./firebase.js";
+import {createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup,sendPasswordResetEmail,sendEmailVerification,onAuthStateChanged,signOut,updatePassword,confirmPasswordReset} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {db} from "./firebase.js";
+import {doc,setDoc,serverTimestamp,getDoc} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+const status=document.getElementById("auth-status");const msg=e=>{if(status)status.textContent=e?.message||e||""};
+document.getElementById("login-form")?.addEventListener("submit",async e=>{e.preventDefault();try{await signInWithEmailAndPassword(auth,email.value,password.value);location.href="dashboard.html"}catch(x){msg(x)}});
+document.getElementById("google-login")?.addEventListener("click",async()=>{try{await signInWithPopup(auth,googleProvider);location.href="dashboard.html"}catch(x){msg(x)}});
+document.getElementById("register-form")?.addEventListener("submit",async e=>{e.preventDefault();try{const c=await createUserWithEmailAndPassword(auth,email.value,password.value);await setDoc(doc(db,"users",c.user.uid),{displayName:name.value,phone:phone.value,role:"user",accountStatus:"active",verificationStatus:"email_pending",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});await sendEmailVerification(c.user);location.href="verify-email.html"}catch(x){msg(x)}});
+document.getElementById("forgot-form")?.addEventListener("submit",async e=>{e.preventDefault();try{await sendPasswordResetEmail(auth,email.value);msg("Reset email sent.")}catch(x){msg(x)}});
+document.getElementById("refresh-verification")?.addEventListener("click",async()=>{try{await auth.currentUser?.reload();msg(auth.currentUser?.emailVerified?"Email verified.":"Still waiting for verification.")}catch(x){msg(x)}});
+document.getElementById("logout")?.addEventListener("click",async()=>{await signOut(auth);location.href="index.html"});
+document.getElementById("reset-form")?.addEventListener("submit",async e=>{e.preventDefault();const code=new URLSearchParams(location.search).get("oobCode");try{await confirmPasswordReset(auth,code,password.value);msg("Password updated.");setTimeout(()=>location.href="login.html",800)}catch(x){msg(x)}});
